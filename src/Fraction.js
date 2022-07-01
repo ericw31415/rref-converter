@@ -12,11 +12,27 @@ class Fraction {
                         a.#denom * b.#denom);
   }
 
-  toString() {
+  static mult(a, b) {
+    return new Fraction(a.#num * b.#num, a.#denom * b.#denom);
+  }
+
+  get num() {
+    return this.#num;
+  }
+
+  get denom() {
+    return this.#denom;
+  }
+
+  toJSON() {
     const f = this.reduce();
     if (f.#denom === 1)
       return f.#num.toString();
     return `${f.#num}/${f.#denom}`;
+  }
+
+  recip() {
+    return new Fraction(this.#denom, this.#num);
   }
 
   reduce() {

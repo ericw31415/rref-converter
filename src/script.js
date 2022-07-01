@@ -3,7 +3,7 @@ function addDisplayRow(cols) {
   for (let i = 0; i < cols; i++) {
     const rowCell = document.createElement("td");
     const numInput = document.createElement("input");
-    numInput.type = "number";
+    numInput.type = "text";
     numInput.value = "0";
     rowCell.appendChild(numInput);
     tableRow.appendChild(rowCell);
@@ -23,7 +23,7 @@ function addDisplayCol() {
   for (const row of document.querySelectorAll("tr")) {
     const rowCell = document.createElement("td");
     const numInput = document.createElement("input");
-    numInput.type = "number";
+    numInput.type = "text";
     numInput.value = "0";
     rowCell.appendChild(numInput);
     row.appendChild(rowCell);
@@ -44,18 +44,28 @@ function firstNonZero(matrix, start, col) {
 }
 
 function printMatrix(matrix) {
+  console.log(JSON.stringify(matrix));
   //document.body.innerHTML += `\\[\\begin{bmatrix}${matrix.map(x => x.join("&")).join("\\\\")}\\end{bmatrix}\\]`;
 }
 
 function convert(rows, cols) {
   const matrix = new Matrix(rows, cols);
   const inputs = document.querySelectorAll("table input");
-  for (const i of inputs.keys())
-    matrix[Math.floor(i / cols)][i % cols] = Number(inputs[i].value);
+  for (const i of inputs.keys()) {
+    if (/^\d+$/.test(inputs[i].value)) {
+      matrix[Math.floor(i / cols)][i % cols] = new Fraction(
+        Number(inputs[i].value), 1);
+    } else if (/^\d+\/\d+$/.test(inputs[i].value)) {
+      matrix[Math.floor(i / cols)][i % cols] = new Fraction(
+        ...inputs[i].value.split("/").map(x => Number(x)));
+    }
+  }
 
-  document.body.appendChild(document.createElement("h2").appendChild(document.createTextNode("Original Matrix")));
+  // document.body.appendChild(document.createElement("h2").appendChild(document.createTextNode("Original Matrix")));
   printMatrix(matrix);
+  printMatrix(matrix.rref());
 
+  /*
   // Gaussian elimination
   let i = 0;
   let j = 0;
@@ -78,8 +88,9 @@ function convert(rows, cols) {
       i++;
     }
     console.log(i, j, JSON.parse(JSON.stringify(matrix)));
+    console.log(matrix);
     j++;
-  }
+  }*/
 
   // for (let j = 0; j < cols; j++) {
   //   for (let i = 0; i < rows; i++) {
@@ -146,9 +157,9 @@ function convert(rows, cols) {
   document.querySelector("#rows").addEventListener("change", changeRows);
   document.querySelector("#cols").addEventListener("change", changeCols);
   document.querySelector("#convert").addEventListener("click",
-                                                      e => {
-                                                        convert(rows, cols)
-                                                      });
+    e => {
+      convert(rows, cols);
+    });
 
   let rows = 1;
   let cols = 1;
