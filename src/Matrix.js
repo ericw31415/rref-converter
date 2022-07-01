@@ -52,14 +52,10 @@ class Matrix extends Array {
     let j = 0;
     while (j < this.#cols) {
       const nonZero = matrix.#firstNonZero(i, j);
-      if (nonZero === null) {
-        console.log("done");
-      } else {
+      if (nonZero !== null) {
         if (nonZero !== i)
           matrix.swap(i, nonZero);
-        console.log(i, j, JSON.stringify(matrix));
         matrix.scale(i, matrix[i][j].recip());
-        console.log(i, j, JSON.stringify(matrix));
 
         // Clear column
         for (let row = 0; row < this.#rows; row++) {
@@ -70,7 +66,6 @@ class Matrix extends Array {
         }
         i++;
       }
-      console.log(i, j, JSON.stringify(matrix));
       j++;
     }
     return matrix;
