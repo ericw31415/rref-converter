@@ -89,14 +89,18 @@ function convert(rows, cols) {
     const newRows = Number(document.querySelector("#rows").value);
 
     if (newRows > rows) {
-      // Add row
-      matrixTable.push(new Array(cols));
-      matrixTable[matrixTable.length - 1].fill(0);
-      addDisplayRow(cols);
+      // Add rows
+      for (let i = rows; i < newRows; i++) {
+        matrixTable.push(new Array(cols));
+        matrixTable[matrixTable.length - 1].fill(0);
+        addDisplayRow(cols);
+      }
     } else {
-      // Delete last row
-      matrixTable.pop();
-      delDisplayRow();
+      // Delete last rows
+      for (let i = rows; i > newRows; i--) {
+        matrixTable.pop();
+        delDisplayRow();
+      }
     }
     rows = newRows;
   }
@@ -105,15 +109,19 @@ function convert(rows, cols) {
     const newCols = Number(document.querySelector("#cols").value);
 
     if (newCols > cols) {
-      // Add column
-      for (const row of matrixTable)
-        row.push(0);
+      // Add columns
+      for (let j = cols; j < newCols; j++) {
+        for (const row of matrixTable)
+          row.push(0);
         addDisplayCol();
+      }
     } else {
-      // Delete last column
-      for (const row of matrixTable)
-        row.pop();
+      // Delete last columns
+      for (let j = cols; j > newCols; j--) {
+        for (const row of matrixTable)
+          row.pop();
         delDisplayCol();
+      }
     }
     cols = newCols;
   }
